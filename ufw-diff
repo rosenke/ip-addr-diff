@@ -30,7 +30,7 @@ check_binary () {
  fi
 }
 ufw_current () {
- "${ufw}" "${ufw_options}" >"${current}"
+ "${ufw}" ${ufw_options} >"${current}"
 }
 
 #check if binaries exist
