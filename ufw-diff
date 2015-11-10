@@ -1,0 +1,57 @@
+#!/bin/bash
+
+# Purpose:	show difference between two runs of ufw
+# Usage:	ufw-diff
+# Example:	ufw-diff
+# Responsible:	Stephan Rosenke <r01-571@r0s.de>
+# License:	CC BY-SA 4.0
+# Version:	2015-11-10
+
+#set some user serviceable vars
+diff="/usr/bin/diff"
+diff_options="-u"
+ufw="/usr/sbin/ufw"
+ufw_options="status verbose"
+
+################################################################################
+# DO NOT MESS BEHIND THIS LINE #################################################
+################################################################################
+
+#set some non-user serviceable vars
+scriptname=$(basename $0)
+current="/var/log/${scriptname}_current"
+old="/var/log/${scriptname}_old"
+
+#functions
+check_binary () {
+ if [ ! -x "${1}" ] ; then
+  echo "${1} does not exist ... exiting"
+  exit 1
+ fi
+}
+ufw_current () {
+ "${ufw}" "${ufw_options}" >"${current}"
+}
+
+#check if binaries exist
+for i in ${diff} ${ufw} ; do
+ check_binary "${i}"
+done
+
+#
+#main
+#
+
+#check if $current exists otherwise touch it
+test -e "${current}" || touch "${current}"
+#check if $old exists, rm it
+test -O "${old}" && rm "${old}"
+#mv $current to $old
+test -e "${old}" || mv "${current}" "${old}"
+
+#dump netstat with current data
+ufw_current
+
+#show differences
+"${diff}" "${diff_options}" "${old}" "${current}"
+
