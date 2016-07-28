@@ -1,8 +1,9 @@
-# ufw-diff
+# ip-addr-diff
 
 ## ABOUT
 
-This bash-script helps you keeping track of changes to your packetfilter rules.
+This bash-script helps you keeping track of changes to your ip address
+configuration.
 It shows you a diff between the current and last run of the script.
 
 ## AUTHOR
