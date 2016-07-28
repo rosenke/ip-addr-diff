@@ -1,17 +1,17 @@
 #!/bin/bash
 
-# Purpose:	show difference between two runs of ufw
-# Usage:	ufw-diff
-# Example:	ufw-diff
+# Purpose:	show difference between two runs of ip addr show
+# Usage:	ip-addr-diff
+# Example:	ip-addr-diff
 # Responsible:	Stephan Rosenke <r01-571@r0s.de>
 # License:	CC BY-SA 4.0
-# Version:	2015-11-10
+# Version:	2016-07-28
 
 #set some user serviceable vars
 diff="/usr/bin/diff"
 diff_options="-u"
-ufw="/usr/sbin/ufw"
-ufw_options="status verbose"
+ip="/bin/ip"
+ip_options="addr show"
 
 ################################################################################
 # DO NOT MESS BEHIND THIS LINE #################################################
@@ -29,12 +29,12 @@ check_binary () {
   exit 1
  fi
 }
-ufw_current () {
- "${ufw}" ${ufw_options} >"${current}"
+ip_current () {
+ "${ip}" ${ip_options} >"${current}"
 }
 
 #check if binaries exist
-for i in ${diff} ${ufw} ; do
+for i in ${diff} ${ip} ; do
  check_binary "${i}"
 done
 
@@ -50,8 +50,7 @@ test -O "${old}" && rm "${old}"
 test -e "${old}" || mv "${current}" "${old}"
 
 #dump netstat with current data
-ufw_current
+ip_current
 
 #show differences
 "${diff}" "${diff_options}" "${old}" "${current}"
-
